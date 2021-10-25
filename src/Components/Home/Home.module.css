@@ -1,0 +1,23 @@
+.main-container {
+    padding-top:5rem;
+    height: 100vh;
+}   
+    .intro-page {
+        display: flex;
+        height: 100%;
+        align-items: center
+    }
+    .intro-page p {
+        font-size: 1.5rem;
+        color: #819ec7;
+    }
+    .slogan {
+        color: #273b98;
+        font-weight: bold;
+        font-size: 5rem;
+    }
+    .main-image img {
+        height: 600px;
+        display: block;
+        margin: auto;
+    }

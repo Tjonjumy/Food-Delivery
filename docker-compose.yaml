@@ -1,0 +1,31 @@
+version: '3.4'
+services:
+  mssql:
+    image: 'mcr.microsoft.com/mssql/server:2017-CU20-ubuntu-16.04'
+    ports:
+      - '7900:1433'
+    container_name: mssql
+    environment:
+      SA_PASSWORD: 'Sup3rS3cr3t'
+      ACCEPT_EULA: 'Y'
+    volumes:
+      - 'mssql:/var/opt/mssql'
+    networks:
+      rd: null
+  api:
+    image: 'linhlefpt/vs:latest'
+    container_name: api
+    environment:
+      - 'ConnectionStrings__DbConnection=Data Source=mssql;Initial Catalog=vs;Persist Security Info=True;User ID=sa;password=Sup3rS3cr3t'
+    ports:
+      - "8080:80"
+    depends_on:
+      - mssql
+    networks:
+      rd: null
+volumes:
+  mssql:
+    driver: local
+networks:
+  rd:
+    driver: bridge
