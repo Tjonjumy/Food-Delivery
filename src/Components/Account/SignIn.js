@@ -1,10 +1,13 @@
 import { Fragment, useState} from 'react';
 import { useHistory } from 'react-router'; 
+import { useDispatch } from 'react-redux';
 
 import classes from './Account.module.css'
 import homeBannerImg from '../../assets/images/home-banner.png';
+import { authActions } from '../../Store/auth';
 
 const SignIn = () => {
+    const dispatch = useDispatch();
     const history = useHistory();
 
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -32,9 +35,18 @@ const SignIn = () => {
                 // 'Content-Type': 'application/x-www-form-urlencoded',
               },
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw('error')
+            }
+            console.log(response);
+            return response.json()}
+        )
         .then(data => {
-            history.push('/')
+            console.log(useDispatch)
+            dispatch(authActions.login());
+            const shopId = data.shopId;
+            history.push('/admin')
         })
         .catch((error) => {
 

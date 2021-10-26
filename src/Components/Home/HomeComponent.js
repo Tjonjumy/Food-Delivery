@@ -1,9 +1,12 @@
 import { Fragment } from "react";
+
 import { Link } from 'react-router-dom';
 
 import classes from './Home.module.css';
 import homeBannerImg from '../../assets/images/home-banner.png';
 const Home = () => {
+    
+
     return <Fragment>
         <div className={classes['main-container']}>
             <div className={`row m-0 ${classes['intro-page']}`}>

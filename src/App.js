@@ -1,4 +1,5 @@
 import './App.css';
+import { useSelector } from 'react-redux';
 import { BrowserRouter as Router,
           Switch,
           Route
@@ -8,8 +9,10 @@ import Home from './Components/Home/HomeComponent';
 import Header from './Components/UI/Header';
 import SignUp from './Components/Account/SingUp';
 import SignIn from './Components/Account/SignIn';
-import AdminHome from './Components/HomePage/AdminHome';
+import AdminHome from './Components/Admin/AdminHome';
 function App() {
+ 
+
   return (
     <Router>
       <div className='w-100'>
@@ -27,7 +30,7 @@ function App() {
           <Route path="/sign-up">
             <SignUp />
           </Route>
-          <Route path="/admin/:id">
+          <Route path="/admin">
             <AdminHome />
           </Route>
         </Switch>

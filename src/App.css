@@ -33,6 +33,10 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+.main-container {
+  padding-top:5rem;
+  height: 100vh;
+} 
 .inp-img {
   cursor: pointer;
 }
