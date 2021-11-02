@@ -1,8 +1,52 @@
-import { Fragment } from 'react';
+import { Fragment, useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import AddFoodItem from './AddFoodItem';
+import { foodsActions } from '../../Store/foods';
+import FoodItem from '../Foods/FoodItem';
 
-const Foods = () => {
+const Foods = (props) => {
+    const dispatch = useDispatch();
+    const [item, setItem] = useState(null);
+    const id = localStorage.getItem('shopId');
+    const items = useSelector(state => state.foods.items);
+
+    const getItemEdit = (item) => {
+        setItem(item);
+    }
+    //const activeItems = items.filter(item => item.isActive);
+    const listItems = items.map(item => {
+        return <FoodItem key={item.itemId} item={item} 
+            toggleAlert={props.toggleAlert}
+            getItemEdit={getItemEdit}
+            />
+    })
+    const url = `http://localhost:8080/api/Shop/${id}`;
+    const fetchItems = useCallback(async () => {
+        try {
+            const response = await fetch(url,
+                {
+                    method: 'GET',
+                }
+            );
+            if (!response.ok) {
+                throw new Error('Something went wrong!');
+            }
+            const data = await response.json();
+            console.log(data);
+            dispatch(foodsActions.setItems({items: data.items, total: data.items.length}));
+
+        } catch(error) {
+            console.log(error)
+        }
+    }, []);
+    
+
+    // useEffect(() => {
+    //     fetchItems();
+    // }, [fetchItems]);
+
+
     return <Fragment>
         <div className="row justify-content-end">
             <button type="button" className="btn btn-success" data-toggle="modal" data-target="#exampleModal">Add</button>
@@ -13,29 +57,9 @@ const Foods = () => {
             <div className="col-3">Price</div>
             <div className="col-3"></div>
         </div>
-        <div className="row mt-3">
-            <div className="col-3 food-img">
-                <img src="https://baoamthuc.com/wp-content/uploads/antag/2019/02/cach-lam-pizza-tom-chien-hap-dan-tai-nha-0143.jpg" alt="cake" />
-            </div>
-            <div className="col-3">Cake</div>
-            <div className="col-3">$5.00</div>
-            <div className="col-3">
-                <button type="button" className="btn btn-secondary mr-2">Edit</button>
-                <button type="button" className="btn btn-danger">Delete</button>
-            </div>
-        </div>
-        <div className="row mt-3">
-            <div className="col-3 food-img">
-                <img src="https://baoamthuc.com/wp-content/uploads/antag/2019/02/cach-lam-pizza-tom-chien-hap-dan-tai-nha-0143.jpg" alt="cake" />
-            </div>
-            <div className="col-3">Cake</div>
-            <div className="col-3">$5.00</div>
-            <div className="col-3">
-                <button type="button" className="btn btn-secondary mr-2">Edit</button>
-                <button type="button" className="btn btn-danger">Delete</button>
-            </div>
-        </div>
-        <AddFoodItem />
+        {listItems}
+        
+        <AddFoodItem toggleAlert={props.toggleAlert} item={item}/>
         
     </Fragment>
 }

@@ -33,6 +33,15 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+  opacity: 1;;
+}
+
 .main-container {
   padding-top:5rem;
   height: 100vh;
@@ -43,10 +52,18 @@ input::-webkit-inner-spin-button {
 .required {
   color: red;
 }
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
+button:disabled {
+  cursor: not-allowed;
 }
+
+.alert.alert-success {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+  margin-bottom: 0;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

@@ -100,7 +100,16 @@
     background: #fff;
     min-height: 460px;
   }
-  .food-img img {
+  .food-img img, .preview-img {
       width: 100px;
       height: 62px;
+      object-fit: cover;
+  }
+  .remove-img {
+    position: absolute;
+    left: 100px;
+    opacity: 0.5;
+  }
+  .remove-img:hover {
+      opacity: 1;
   }

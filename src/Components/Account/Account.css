@@ -1,0 +1,77 @@
+.preview-img {
+    width: 100px;
+    height: 100px;
+}
+
+.main-container {
+    padding-top:5rem;
+    height: 100vh;
+}   
+    .intro-page {
+        display: flex;
+        height: 100%;
+        align-items: center
+    }
+    .intro-page p {
+        font-size: 1.5rem;
+        color: #819ec7;
+    }
+    .slogan {
+        color: #273b98;
+        font-weight: bold;
+        font-size: 5rem;
+    }
+    .main-image img {
+        height: 600px;
+        display: block;
+        margin: auto;
+    }
+    .remove-img {
+        position: absolute;
+        left: 100px;
+        opacity: 0.5;
+    }
+    .remove-img:hover {
+        opacity: 1;
+    }
+    .divider h5 {
+        line-height: 1;
+        font-weight: 400;
+        z-index: 2;
+        position: relative;
+        display: inline-block;
+        background-color: #edf0f5;
+        padding: 0 15px;
+    }
+    .divider:after {
+        content: "";
+        width: 100%;
+        background-color: transparent;
+        display: block;
+        height: 1px;
+        border-top: 1px solid #fff;
+        position: absolute;
+        top: 50%;
+        margin-top: -1px;
+        z-index: 1;
+    }
+    .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+    .dropdown-menu {
+        position: absolute;
+        right: 0;
+        left: auto;
+    }
+    .dropdown-toggle {
+        color: #fff;
+    }
+    .dropdown-item {
+        cursor: pointer;
+    }
+    .avatar {
+        width: 35p;
+        height: 35px;
+        border-radius: 50%;
+    }

@@ -14,7 +14,7 @@ const Home = () => {
                     <h1 className={classes.slogan}>Food Delivery</h1>
                     <p className='pl-2'>Freshness and craziness delivered at your doorstep.</p>
                     <button type="button" className="btn btn-primary btn-lg">
-                        <Link to="/sign-up">Sign Up</Link>
+                        <Link to="/buyer/sign-up">Sign Up</Link>
                     </button>
                 </div>
                 <div className={`col-md-6 ${classes['main-image']}`}>
