@@ -1,0 +1,16 @@
+const data = {
+        items: itemsSelected,
+        customerId: customerId,
+        cartId: cartId
+    }
+    //const apiUrlSubmit = 'http://localhost:8080/api/Cart/submit';
+    const apiUrlSubmit = 'http://localhost:8080/api/Cart/submit';
+    const submitOrder = () => {
+        showLoader();
+        fetch(apiUrlSubmit, { 
+        method: 'POST',
+        headers: {
+            accept: '*/*',
+            'content-type': 'application/json-patch+json'
+        },
+        body: JSON.stringify(data)

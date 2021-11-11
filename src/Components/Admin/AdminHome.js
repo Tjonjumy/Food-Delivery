@@ -1,14 +1,16 @@
 import { Fragment, useEffect, useCallback, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useRouteMatch, Switch, Route, NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useRouteMatch, Switch, Route, NavLink } from 'react-router-dom';
 
 import './AdminHome.css';
 import Foods from './Foods';
 import Orders from './Orders';
+import OrderDetail from '../Shop/OrderDetail';
 import { foodsActions } from '../../Store/foods';
+import { orderActions } from '../../Store/order';
 
 const AdminHome = () => {
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
     const dispatch = useDispatch();
 
     const [shopName, setShopName] = useState('');
@@ -42,9 +44,30 @@ const AdminHome = () => {
         }
     }, []);
     
+    const urlFetchOrder = `http://localhost:8080/api/Order/${shopId}/shop/all`;
+
+    const fetchOrderData = useCallback(async () => {
+        try {
+            const response = await fetch(urlFetchOrder,
+                {
+                    method: 'GET',
+                }
+            );
+            if (!response.ok) {
+                throw new Error('Something went wrong!');
+            }
+            const data = await response.json();
+            dispatch(orderActions.setOrderData(data.orders));
+
+        } catch(error) {
+            console.log(error)
+        }
+    }, []);
+
 
     useEffect(() => {
         fetchItems();
+        fetchOrderData();
     }, []);
 
     const copyShopUrl = () => {
@@ -61,11 +84,6 @@ const AdminHome = () => {
                 <div className="row profile">
                     <div className="col-md-3">
                         <div className="profile-sidebar">
-
-                            <div className="profile-userpic">
-
-                            </div>
-
                             <div className="profile-usertitle">
                                 <div className="profile-usertitle-name">
                                     {shopName} Shop
@@ -88,7 +106,7 @@ const AdminHome = () => {
                             <div className="profile-usermenu">
                                 <ul className="nav flex-column">
                                     <li>
-                                        <NavLink exact activeClassName="active" to={`${url}/`}>
+                                        <NavLink exact activeClassName="active" to={`${url}`}>
                                             <i className="glyphicon glyphicon-home"></i>
                                             Home </NavLink>
                                     </li>
@@ -115,22 +133,18 @@ const AdminHome = () => {
                     <div className="col-md-9">
                         <div className="profile-content">
                         {isShowALert && 
-                            <div class="alert alert-success" role="alert">
-                                <i class="fa fa-check" aria-hidden="true">&nbsp;</i>{contentALert}</div>
+                            <div className="alert alert-success" role="alert">
+                                <i className="fa fa-check" aria-hidden="true">&nbsp;</i>{contentALert}</div>
                         }
                             <Switch>
-                                {/* <Route exact path={path}>
-                            <h3>Please select a topic.</h3>
-                            </Route> */}
-                                {/* <Route path={`${path}/:topicId`}>
-                                <Foods />
-                            </Route> */}
-
                                 <Route path='/admin/foods'>
                                     <Foods toggleAlert={toggleAlert}/>
                                 </Route>
-                                <Route path='/admin/orders'>
+                                <Route exact path='/admin/orders'>
                                     <Orders />
+                                </Route>
+                                <Route path='/admin/orders/:orderId'>
+                                    <OrderDetail />
                                 </Route>
                             </Switch>
                         </div>

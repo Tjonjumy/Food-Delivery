@@ -1,7 +1,6 @@
 import { useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Input from '../../UI/Input';
 import { cartActions } from '../../../Store/cart';
 const FoodItemForm = (props) => {
     const dispatch = useDispatch();
@@ -12,13 +11,61 @@ const FoodItemForm = (props) => {
     const { itemId, name, price } = props.item;
     const { customerId, isCart } = props;
 
+
     const urlApiRemoveItem = 'http://localhost:8080/api/Cart/remove/item';
     const urlApiAddItem = 'http://localhost:8080/api/Cart/add/item';
 
-    const addItemToCartHandler = useCallback(async () => {
+    const addItemToCartHandler = useCallback(async (event) => {
         try {
+            event.preventDefault(); 
             props.showLoader();
             const response = await fetch(urlApiAddItem, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                body: JSON.stringify({
+                    customerId: customerId,
+                    cartId: cartId,
+                    itemId: itemId
+                })
+            });
+            if (!response.ok) {
+                setTimeout(() => {
+                    props.hideLoader();
+                }, 1000)
+                throw new Error(response.status)
+            }
+            const data = await response.json();
+            if (data.isSuccess) {
+                dispatch(cartActions.addItemToCart({
+                    itemId,
+                    name,
+                    price,
+                    amount: 1,
+                }))
+                props.toggleAlert(true, 'Add to Cart Successfuly!');
+                setTimeout(() => {
+                    props.hideLoader();
+                    props.toggleAlert(false);
+                }, 1500)
+            } else {
+                props.toggleAlert(true, data.errorMessage, '1');
+                setTimeout(() => {
+                    props.hideLoader();
+                    props.toggleAlert(false);
+                }, 5000)
+            }
+            
+        } catch(error) {
+            console.error(error);
+        }
+    }, [])
+
+    const removeItem = useCallback(async () => {
+        try {
+            const response = await fetch(urlApiRemoveItem, {
                 method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain',
@@ -34,76 +81,33 @@ const FoodItemForm = (props) => {
                 throw new Error(response.status)
             }
             const data = await response.json();
-            console.log(data)
             if (data.isSuccess) {
-                dispatch(cartActions.addItemToCart({
-                    itemId,
-                    name,
-                    price,
-                    amount: 1,
-                }))
+                dispatch(cartActions.removeItemFromCart(data.itemId));
             }
-            props.toggleAlert(true, 'Add to Cart Successfuly!');
-            setTimeout(() => {
-                props.hideLoader();
-                props.toggleAlert(false);
-            }, 1000)
-            
-        } catch(error) {
-            console.error(error);
-        }
-    })
-
-    const removeItem = useCallback(async () => {
-        try {
-            props.showLoader();
-            const response = await fetch(urlApiRemoveItem, {
-                method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain',
-                        'Content-Type': 'application/json;charset=UTF-8'
-                    },
-                    body: JSON.stringify({
-                        customerId: customerId,
-                        cartId: cartId,
-                        itemId: itemId
-                    })
-            });
-            const data = await response.json();
-            console.log(data)
-            // if (data.isSuccess) {
-            //     dispatch(cartActions.addItemToCart({
-            //         itemId,
-            //         name,
-            //         price,
-            //         amount: 1,
-            //     }))
-            // }
-            props.toggleAlert(true, 'Add to Cart Successfuly!');
-            setTimeout(() => {
-                props.hideLoader();
-                props.toggleAlert(false);
-            }, 1000)
         } catch(error) {
             console.error(error);
         }
     });
 
+
     return (
         <form className="" onSubmit={addItemToCartHandler}>
-            {/* {isCart && <div className="input-group mb-3">
-                <div className="input-group-prepend" id="button-addon3">
-                    <button className="btn btn-outline-secondary" type="button" onClick={removeItem}>-</button>
+            {isCart && <div className="input-group mb-3">
+                {/* <div className="input-group-prepend" id="button-addon3">
+                    <button className="btn btn-outline-secondary" type="button" onClick={decreaseAmount}>-</button>
                 </div>
-                <input type="number" readOnly = {true} className="amount-input" defaultValue="1" ref={amountInputRef} />
+                <input type="number" readOnly = {true} className="amount-input" defaultValue={props.item.amount} ref={amountInputRef} />
                 <div className="input-group-prepend" id="button-addon3">
-                    <button className="btn btn-outline-secondary" type="button" onClick={addItem}>+</button>
-                </div>
-            </div>} */}
-            {!isCart && <button type="submit" className="btn btn-outline-success">
-            <i class="fa fa-cart-plus" aria-hidden="true"></i>&nbsp;Add</button>}
+                    <button className="btn btn-outline-secondary" type="button" onClick={increaseAmount}>+</button>
+                </div> */}
+                <button type="submit" className="btn btn-outline-success">
+                    <i className="fa fa-cart-plus" aria-hidden="true"></i>&nbsp;Add
+                </button>
+            </div>}
+            {!isCart && <button type="submit" className="btn btn-outline-success btn-add-item">
+            <i className="fa fa-cart-plus" aria-hidden="true"></i>&nbsp;Add</button>}
             
-            {isCart && <button type="submit" className="btn btn-outline-danger"
+            {isCart && <button type="button" className="btn btn-outline-danger"
             onClick={removeItem}>Remove</button>}
         </form>
     )

@@ -27,8 +27,11 @@ const Header = () => {
 
     const [isCustomer, setIsCustomer] = useState(false);
     const logOutHandler = () => {
-      localStorage.removeItem('shopId');
-      localStorage.removeItem('customer');
+      if (customerId) {
+        localStorage.removeItem('customer');
+      } else {
+        localStorage.removeItem('shopId');
+      }
       dispatch(authActions.logout());
       history.push('/')
       //setIsSignedIn(false);
@@ -43,15 +46,12 @@ const Header = () => {
 
     return <Fragment>
         <ul className="header">
-          {!isCustomer &&
+          {!isCustomer && !isAuth &&
           <li>
-            <Link to="/shop/sign-in">For Seller</Link>
+            <Link to="/shop/sign-in"><i class="fa fa-shopping-bag" aria-hidden="true"></i>&nbsp;For Seller</Link>
           </li>}
           <li>
-            <Link to="/" onClick={forAllUser}>Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
+            <Link to="/" onClick={forAllUser}><i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home</Link>
           </li>
           {
             (!customerId && !shopId && !isAuth) &&

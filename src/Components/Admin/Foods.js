@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import AddFoodItem from './AddFoodItem';
 import { foodsActions } from '../../Store/foods';
-import FoodItem from '../Foods/FoodItem';
+import FoodItem from '../Shop/FoodItem';
 
 const Foods = (props) => {
     const dispatch = useDispatch();
@@ -21,35 +21,12 @@ const Foods = (props) => {
             getItemEdit={getItemEdit}
             />
     })
-    const url = `http://localhost:8080/api/Shop/${id}`;
-    const fetchItems = useCallback(async () => {
-        try {
-            const response = await fetch(url,
-                {
-                    method: 'GET',
-                }
-            );
-            if (!response.ok) {
-                throw new Error('Something went wrong!');
-            }
-            const data = await response.json();
-            console.log(data);
-            dispatch(foodsActions.setItems({items: data.items, total: data.items.length}));
-
-        } catch(error) {
-            console.log(error)
-        }
-    }, []);
     
-
-    // useEffect(() => {
-    //     fetchItems();
-    // }, [fetchItems]);
-
-
     return <Fragment>
-        <div className="row justify-content-end">
-            <button type="button" className="btn btn-success" data-toggle="modal" data-target="#exampleModal">Add</button>
+        <div className="row justify-content-end m-0">
+            <button type="button" className="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add
+            </button>
         </div>
         <div className="row mt-3">
             <div className="col-3">Picture</div>

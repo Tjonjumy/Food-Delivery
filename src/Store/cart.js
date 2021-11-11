@@ -13,7 +13,7 @@ const cartSclie = createSlice({
             const existingItem = state.items.find(item => item.itemId === newItem.itemId);
             state.totalQuantity ++;
             if (existingItem) {
-                existingItem.quantity ++;
+                existingItem.amount ? existingItem.amount ++ : existingItem.quantity ++;              
                 existingItem.totalPrice += newItem.price;
             } else {
                 state.items.push({
@@ -26,23 +26,30 @@ const cartSclie = createSlice({
             }
         },
         removeItemFromCart(state, action) {
-            const id = action.payload.id;
-            const existingItem = state.items.find(item => item.id === id);
-            state.totalQuantity--;
-            if (existingItem.quantity > 1) {
-                existingItem.quantity--;
-                existingItem.totalPrice -= existingItem.price;
-            } else {
-                state.items = state.items.filter(item => item.id !== id);
-            }
+            const id = action.payload;
+            const existingItem = state.items.find(item => item.itemId === id);
+            existingItem.amount ? state.totalQuantity -= existingItem.amount :
+            state.totalQuantity -= existingItem.quantity;
+            state.items = state.items.filter(item => item.itemId !== id);
+            // if (existingItem.quantity > 1) {
+            //     existingItem.quantity--;
+            //     existingItem.totalPrice -= existingItem.price;
+            // } else {
+            //     state.items = state.items.filter(item => item.id !== id);
+            // }
         },
         createCart(state, action) {
-            console.log(action.payload)
             state.cartId = action.payload;
         },
         setCartData(state, action) {
             state.items = action.payload.items;
             state.totalQuantity = action.payload.totalQuantity;
+        },
+
+        resetCart(state) {
+            state.items = [];
+            state.totalQuantity = 0;
+            state.cartId = null;
         }
     }
 });

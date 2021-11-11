@@ -1,11 +1,22 @@
 import { Fragment } from "react";
+import { useSelector } from 'react-redux';
 
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import classes from './Home.module.css';
 import homeBannerImg from '../../assets/images/home-banner.png';
 const Home = () => {
-    
+    const history = useHistory();
+
+    const shopId = useSelector(state => state.auth.shopId);
+    const customerId = useSelector(state => state.auth.customerId);
+
+    if (shopId) {
+        history.push(`/admin`);
+    };
+    if (customerId) {
+        history.push(`/shop`);
+    }
 
     return <Fragment>
         <div className={classes['main-container']}>

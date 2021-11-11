@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {items: [], total: 0};
 
 const foodsSlice = createSlice({
-    name: 'authentication',
+    name: 'food',
     initialState: initialState,
     reducers: {
         setItems(state, action) {

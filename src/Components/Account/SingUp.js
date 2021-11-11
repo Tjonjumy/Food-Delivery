@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import './Account.css';
 import homeBannerImg from '../../assets/images/home-banner.png';
+import Notification from '../Alert/Notification';
 
 const SignUp = (props) => {
     const {role} = props;
@@ -12,6 +13,8 @@ const SignUp = (props) => {
 
     const imgRef = useRef();
     const imgPreviewRef = useRef();
+
+    const [contentALert, setContentALert] = useState('');
 
     const [imgInp, setImgInp] = useStateWithCallbackLazy('');
 
@@ -74,7 +77,6 @@ const SignUp = (props) => {
         } else {
             formData.append('Avatar', imgInp);
         }
-        console.log(formData);
         const urlApi = role == 'shop' ? 'http://localhost:8080/api/Shop/register' : 'http://localhost:8080/api/Customer/register';
         fetch(urlApi, {
             method: 'POST', 
@@ -85,7 +87,11 @@ const SignUp = (props) => {
             if (data.error) {
                 
             } else {
-                history.push(`/${role}/sign-in`);
+                setContentALert('Sign Up Successfully!');
+                setTimeout(() => {
+                    setContentALert('');
+                    history.push(`/${role}/sign-in`);
+                }, 1500);
             }
         })
         .catch((error) => {
@@ -179,6 +185,7 @@ const SignUp = (props) => {
                 </div>
             </div>
         </div>
+        { contentALert && <Notification contentALert={contentALert} />}
     </Fragment>
 }
 

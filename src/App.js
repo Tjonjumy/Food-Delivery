@@ -1,5 +1,4 @@
 import './App.css';
-import { useSelector } from 'react-redux';
 import { BrowserRouter as Router,
           Switch,
           Route,
@@ -11,13 +10,13 @@ import Header from './Components/Layout/Header';
 import SignUp from './Components/Account/SingUp';
 import SignIn from './Components/Account/SignIn';
 import AdminHome from './Components/Admin/AdminHome';
-import ShopHome from './Components/Customer/ShopHome';
+import CusHomePage from './Components/Customer/CusHomePage';
+
 function App() {
  
 
   return (
     <Router>
-      <div className='w-100'>
         <Header />
         <Switch>
           <Route exact path="/">
@@ -35,20 +34,17 @@ function App() {
           <Route path="/shop/sign-up">
             <SignUp role="shop"/>
           </Route>
-          {/* <Route path="/shop">
-            <AllShopHome />
-          </Route> */}
-          <Route path="/shop/:shopId">
-            <ShopHome />
+
+          <Route path="/shop">
+            <CusHomePage />
           </Route>
+          {/* <Route path="/shop/:shopId">
+            <ShopHome />
+          </Route> */}
           <PrivateRoute path="/admin">
             <AdminHome />
           </PrivateRoute>
-          <Route path="/about">
-            <About />
-          </Route>
         </Switch>
-      </div>
     </Router>
   );
 }
@@ -56,7 +52,6 @@ function App() {
 export default App;
 
 function PrivateRoute({ children, ...rest }) {
-  let isAuth = useSelector(state => state.auth.isAuthenticated);
   const shopId = localStorage.getItem('shopId');
   return (
     <Route
@@ -67,7 +62,7 @@ function PrivateRoute({ children, ...rest }) {
         ) : (
           <Redirect
             to={{
-              pathname: "/sign-in",
+              pathname: "/shop/sign-in",
               state: { from: location }
             }}
           />
@@ -77,10 +72,3 @@ function PrivateRoute({ children, ...rest }) {
   );
 }
 
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  );
-}

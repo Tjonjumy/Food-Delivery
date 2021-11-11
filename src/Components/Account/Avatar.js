@@ -38,12 +38,12 @@ const Avatar = (props) => {
                 <img src={`data:image/jpeg;base64,${image}`} alt="your avatar"
                     id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false" />
             </div> */}
-            <div class="dropdown">
-                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+            <div className="dropdown">
+                <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
                 <img src={`data:image/jpeg;base64,${avatar}`} alt="your avatar" className="avatar" />
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <p class="dropdown-item" onClick={props.logOutHandler}>Sign Out</p>
+                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <p className="dropdown-item" onClick={props.logOutHandler}>Sign Out</p>
                 </div>
             </div>
         </>
