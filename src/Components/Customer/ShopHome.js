@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useCallback, useState } from 'react';
-import { useParams, useRouteMatch, NavLink } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { foodsActions } from '../../Store/foods';
@@ -17,15 +17,12 @@ const ShopHome = () => {
     const [classALert, setClassALert] = useState('alert-success');
 
     const customer = JSON.parse(localStorage.getItem('customer'));
-    let customerName, phoneNumber, customerId;
+    let customerId;
     if (customer) {
-        customerName = customer.name;
-        phoneNumber = customer.phoneNumber;
         customerId = customer.customerId;
     }
 
     let { shopId } = useParams();
-    let { path, url } = useRouteMatch();
     const cartId = useSelector(state => state.cart.cartId);
 
     const urlApiGetShop = `http://localhost:8080/api/Shop/${shopId}`;

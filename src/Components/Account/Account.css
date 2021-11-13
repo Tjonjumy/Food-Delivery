@@ -64,9 +64,6 @@
         right: 0;
         left: auto;
     }
-    .dropdown-toggle {
-        color: #fff;
-    }
     .dropdown-item {
         cursor: pointer;
     }

@@ -1,10 +1,14 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { cartActions } from '../../../Store/cart';
+import ConfirmModal from '../../Alert/ConfirmModal';
+
 const FoodItemForm = (props) => {
     const dispatch = useDispatch();
-    const amountInputRef = useRef();
+
+    const modalTitle = "Remove Item";
+    const modalContent = "Are you sure remove item?";
 
     const cartId = useSelector(state => state.cart.cartId);
 
@@ -91,25 +95,21 @@ const FoodItemForm = (props) => {
 
 
     return (
-        <form className="" onSubmit={addItemToCartHandler}>
-            {isCart && <div className="input-group mb-3">
-                {/* <div className="input-group-prepend" id="button-addon3">
-                    <button className="btn btn-outline-secondary" type="button" onClick={decreaseAmount}>-</button>
-                </div>
-                <input type="number" readOnly = {true} className="amount-input" defaultValue={props.item.amount} ref={amountInputRef} />
-                <div className="input-group-prepend" id="button-addon3">
-                    <button className="btn btn-outline-secondary" type="button" onClick={increaseAmount}>+</button>
-                </div> */}
-                <button type="submit" className="btn btn-outline-success">
-                    <i className="fa fa-cart-plus" aria-hidden="true"></i>&nbsp;Add
-                </button>
-            </div>}
-            {!isCart && <button type="submit" className="btn btn-outline-success btn-add-item">
-            <i className="fa fa-cart-plus" aria-hidden="true"></i>&nbsp;Add</button>}
-            
-            {isCart && <button type="button" className="btn btn-outline-danger"
-            onClick={removeItem}>Remove</button>}
-        </form>
+        <Fragment>
+            <form className="" onSubmit={addItemToCartHandler}>
+                {!isCart && <button type="submit" className="btn btn-outline-success btn-add-item">
+                <i className="fa fa-cart-plus" aria-hidden="true"></i>&nbsp;Add</button>}
+                
+                {isCart &&
+                <div className="">
+                    <button type="button" className="btn btn-outline-danger mr-2" 
+                        data-toggle="modal" data-target="#confirmModal">
+                        <i className="fa fa-trash" aria-hidden="true"></i></button>
+                    <button type="submit" className="btn btn-outline-success"><b>+</b></button>
+                </div>}
+            </form>
+            <ConfirmModal modalTitle={modalTitle} modalContent={modalContent} removeItem={removeItem}/>
+        </Fragment>
     )
 }
 

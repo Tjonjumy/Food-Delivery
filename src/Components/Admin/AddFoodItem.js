@@ -1,5 +1,5 @@
-import { Fragment, useState , useRef  } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useRef  } from 'react';
+import { useDispatch } from 'react-redux';
 import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import { useHistory } from 'react-router-dom';
 
@@ -32,7 +32,6 @@ const AddFoodItem = (props) => {
         const selectedImg = imgRef.current.files[0];
         if (selectedImg) {
             setImgInp(selectedImg, () => {
-                console.log(imgPreviewRef)
                 imgPreviewRef.current.src = URL.createObjectURL(selectedImg);
             });
         }
@@ -63,7 +62,7 @@ const AddFoodItem = (props) => {
             priceRef.current.value = '';
             setImgInp('');
             props.toggleAlert(true, 'Add item successfully!');
-            setTimeout(() => {props.toggleAlert(false)}, 1000)
+            setTimeout(() => {props.toggleAlert(false)}, 1500)
             //{"itemId":"e1fe0b","name":"Hamburge","price":1.0,"image":"","isActive":true,"errorMessage":null,"shopId":null}
         })
         .catch((error) => {

@@ -1,9 +1,6 @@
-import { useEffect, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { orderActions } from '../../Store/order';
 import OrderItem from '../Shop/OrderItem';
-import OrderDetail from '../Shop/OrderDetail';
 
 const Orders = () => {
 

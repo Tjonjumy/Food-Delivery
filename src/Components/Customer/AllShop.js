@@ -1,24 +1,14 @@
 import { Fragment, useEffect, useState } from 'react';
-import { useRouteMatch, NavLink, Switch, Route } from 'react-router-dom';
 
 import ShopItem from './ShopItem';
-import ShopHome from './ShopHome';
 
 const AllShop = () => {
-    let { url } = useRouteMatch();
-
     const [errorMessage, setErrorMessage] = useState('');
     const [allShops, setAllShops] = useState([]);
 
     const urlAllShop = 'http://localhost:8080/api/Shop/all';
 
     const customer = JSON.parse(localStorage.getItem('customer'));
-    let customerName, phoneNumber, customerId;
-    if (customer) {
-        customerName = customer.name;
-        phoneNumber = customer.phoneNumber;
-        customerId = customer.customerId;
-    }
 
     const listShop = allShops.map(shop => {
         return (
@@ -45,7 +35,6 @@ const AllShop = () => {
         }
     }
 
-    const copyShopUrl = () => { }
 
     useEffect(() => {
         fetchAllShop();
@@ -53,7 +42,7 @@ const AllShop = () => {
 
     return (
         <Fragment>
-            <div class="row">
+            <div className="row">
                 {listShop}
             </div>
             {

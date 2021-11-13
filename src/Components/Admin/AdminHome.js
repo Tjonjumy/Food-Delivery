@@ -131,7 +131,7 @@ const AdminHome = () => {
                         </div>
                     </div>
                     <div className="col-md-9">
-                        <div className="profile-content">
+                        <div className="shop-content">
                         {isShowALert && 
                             <div className="alert alert-success" role="alert">
                                 <i className="fa fa-check" aria-hidden="true">&nbsp;</i>{contentALert}</div>

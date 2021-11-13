@@ -11,6 +11,7 @@ const Header = () => {
   const history = useHistory();
   const dispatch = useDispatch();
     const isAuth = useSelector(state => state.auth.isAuthenticated);
+    const cartId = useSelector(state => state.cart.cartId);
 
     let customerId = useSelector(state => state.auth.customerId);
     let avatar = useSelector(state => state.auth.image);
@@ -44,14 +45,18 @@ const Header = () => {
       setIsCustomer(false);
     }
 
+    const goToCart = () => {
+      history.push(`/shopping/cart/${cartId}`);
+    }
+
     return <Fragment>
         <ul className="header">
           {!isCustomer && !isAuth &&
           <li>
-            <Link to="/shop/sign-in"><i class="fa fa-shopping-bag" aria-hidden="true"></i>&nbsp;For Seller</Link>
+            <Link to="/shop/sign-in"><i className="fa fa-shopping-bag" aria-hidden="true"></i>&nbsp;For Seller</Link>
           </li>}
           <li>
-            <Link to="/" onClick={forAllUser}><i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home</Link>
+            <Link to="/" onClick={forAllUser}><i className="fa fa-home" aria-hidden="true"></i>&nbsp;Home</Link>
           </li>
           {
             (!customerId && !shopId && !isAuth) &&
@@ -61,7 +66,7 @@ const Header = () => {
           }
             <li className="user-info-wraper">
             { (isAuth && customerId) &&
-            <CartButton />}
+            <CartButton goToCart={goToCart}/>}
           { 
             (isAuth) && 
                 <Avatar logOutHandler={logOutHandler} avatar={avatar}/>

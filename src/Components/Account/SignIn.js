@@ -14,7 +14,9 @@ const SignIn = (props) => {
     const history = useHistory();
 
     const [phoneNumber, setPhoneNumber] = useState('');
-    const phoneNumberInputIsInvalid = false;
+    const [enteredPhoneNumberTouched, setEnteredPhoneNumberTouched] = useState(false);
+    const enteredPhoneNumberIsValid = phoneNumber.trim() !== '' && phoneNumber.trim().length > 9 && phoneNumber.trim().length <= 15;
+    const phoneNumberInputIsInvalid = !enteredPhoneNumberIsValid && enteredPhoneNumberTouched;
 
     const maxlengthHandler = (event) => {
         if (event.target.value.length > event.target.maxLength) {
@@ -27,9 +29,18 @@ const SignIn = (props) => {
         setPhoneNumber(value);
     }
 
+    const inputBlurHandler = () => {
+        console.log(enteredPhoneNumberTouched, enteredPhoneNumberIsValid, phoneNumberInputIsInvalid)
+            setEnteredPhoneNumberTouched(true);
+        }
+
     const urlApi = role == 'shop' ? 'http://localhost:8080/api/Shop/login' : 'http://localhost:8080/api/Customer/login';
     const loginHandler = (event) => {
         event.preventDefault();
+        console.log(enteredPhoneNumberIsValid)
+        if (!enteredPhoneNumberIsValid) {
+            return;
+        }
         fetch(urlApi, {
             method: 'POST', 
             body: JSON.stringify({phoneNumber: phoneNumber}),
@@ -55,7 +66,7 @@ const SignIn = (props) => {
             } else {
                 dispatch(authActions.login({phoneNumber: data.phoneNumber, customerId: data.customerId, image: data.avatar}));
                 localStorage.setItem('customer', JSON.stringify(data)); 
-                history.push('/shop/97683e')
+                history.push('/shopping')
             }
         })
         .catch((error) => {
@@ -71,7 +82,11 @@ const SignIn = (props) => {
             history.push("/buyer/sign-up");
         }
     }
-    const phoneInputClasses = 'form-control';
+
+    const phoneInputClasses = phoneNumberInputIsInvalid
+        ? 'form-control is-invalid'
+        : 'form-control';
+
     return <Fragment>
                 <div className="main-container">
                     <div className="row m-0 intro-page">
@@ -88,6 +103,7 @@ const SignIn = (props) => {
                                             name="phoneNumber" placeholder="PhoneNumber" maxLength="15"  
                                             onInput={maxlengthHandler}
                                             onChange={inputChangeHandler}
+                                            onBlur={inputBlurHandler}
                                             />
                                             {
                                                 phoneNumberInputIsInvalid &&

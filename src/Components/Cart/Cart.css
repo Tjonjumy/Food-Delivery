@@ -8,10 +8,10 @@
 .cart-btn, .cart-btn:focus {
     outline: none;
     border: none;
+    color: #000;
 }
 .fa-shopping-cart {
     font-size: 2rem;
-    color: #fff;
 }
 .btn .total-quantity {
     top: -16px;

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useParams} from 'react-router-dom';
 
 import './Cart.css';
 import FoodItem from '../Customer/Foods/FoodItem';
@@ -7,10 +8,11 @@ import Notification from '../Alert/Notification';
 import Loader from '../Alert/Loader';
 import { cartActions } from '../../Store/cart';
 
-const Cart = (props) => {
+const Cart = () => {
     const dispatch = useDispatch();
     const customerId = useSelector(state => state.auth.customerId);
-    const cartId = useSelector(state => state.cart.cartId);
+
+    let {cartId}  = useParams();
 
     const [contentALert, setContentALert] = useState('');
     const [classALert, setClassAlert] = useState('alert-success');
@@ -93,37 +95,52 @@ const Cart = (props) => {
         navigator.clipboard.writeText(`http://localhost:3000/shop/cart/${cartId}`);
     }
 
-    return (
-        //<div className="modal fade bd-example-modal-lg" tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-            <div>
-            <div className="modal-dialog modal-lg">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h4 className="modal-title" id="myLargeModalLabel">Your Cart</h4>
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div className="modal-body">
-                        <div className="list-order">
-                            {listItems}
-                            {listItems.length == 0 && <p>You have no items in your shopping cart</p>}
-                        </div>
-                    </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-outline-secondary"
-                            onClick={copyCartUrl}>
-                            <i className="fa fa-clone" aria-hidden="true"></i>&nbsp;Copy
-                        </button>
-                        <div className="total-price mr-5"><b>Total: ${totalPrice.toFixed(2)}</b></div>
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" className="btn btn-primary" onClick={submitOrder}>Order Now</button>
-                    </div>
-                </div>
+    const fetchCartData = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/Cart/${cartId}?getShop=false`, {
+                method: 'GET',
+            })
+            if (!response.ok) {
+                throw new Error(response.status)
+            }
+            const data = await response.json();
+            const items = data.itemsInCart;
+            let totalQuantity = 0;
+            items.forEach(item => {
+                totalQuantity += item.amount;
+            })
+            dispatch(cartActions.setCartData({ items, totalQuantity }))
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+    useEffect(() => {
+        fetchCartData();
+    }, []);
+
+    return (    
+        <Fragment>
+            <div className="col-12 modal-header justify-content-between">
+                <h4 className="modal-title" id="myLargeModalLabel">
+                <i className="fa fa-shopping-bag" aria-hidden="true"></i>&nbsp;Your Cart</h4>
+                <button type="button" className="btn btn-outline-secondary btn-sm"
+                    onClick={copyCartUrl}>
+                    <i className="fa fa-clone" aria-hidden="true"></i>&nbsp;Copy
+                </button>
+            </div>
+            <div className="mt-5">
+                {listItems}
+                {listItems.length == 0 && <p>You have no items in your shopping cart</p>}
+            </div>
+            <div className="modal-footer">
+                <div className="total-price mr-5"><b>Total: ${totalPrice.toFixed(2)}</b></div>
+                <button type="button" className="btn btn-primary" disabled={listItems.length == 0}
+                    onClick={submitOrder}>Order Now</button>
             </div>
             {isShowALert && <Notification classALert={classALert} contentALert={contentALert} />}
-            {isLoading && <Loader />}
-        </div>
+                {isLoading && <Loader />} 
+        </Fragment>
     )
 }
 

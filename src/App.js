@@ -34,13 +34,10 @@ function App() {
           <Route path="/shop/sign-up">
             <SignUp role="shop"/>
           </Route>
-
-          <Route path="/shop">
+          <Route path="/shopping">
             <CusHomePage />
           </Route>
-          {/* <Route path="/shop/:shopId">
-            <ShopHome />
-          </Route> */}
+
           <PrivateRoute path="/admin">
             <AdminHome />
           </PrivateRoute>

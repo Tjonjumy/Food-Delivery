@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 
-import AddFoodItem from '../Admin/AddFoodItem';
 
 const FoodItem = (props) => {
     const { name, price, image, itemId, shopId, isActive } = props.item;

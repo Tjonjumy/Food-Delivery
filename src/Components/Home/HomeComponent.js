@@ -15,7 +15,7 @@ const Home = () => {
         history.push(`/admin`);
     };
     if (customerId) {
-        history.push(`/shop`);
+        history.push(`/shopping`);
     }
 
     return <Fragment>

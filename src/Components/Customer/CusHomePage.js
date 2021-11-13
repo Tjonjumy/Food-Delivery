@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouteMatch, NavLink, Switch, Route } from 'react-router-dom';
 
@@ -28,6 +28,7 @@ const CusHomePage = () => {
         <div className="main-container">
                 <div className="">
                     <div className="row profile">
+                        {customerId &&
                         <div className="col-md-3">
                             <div className="profile-sidebar">
 
@@ -40,19 +41,10 @@ const CusHomePage = () => {
                                         {customerName}
                                     </div>
                                     <div className="profile-usertitle-job">
-                                        {phoneNumber}
+                                        <i className="fa fa-mobile" aria-hidden="true"></i>&nbsp;{phoneNumber}
                                     </div>
                                 </div>
 
-                                <div className="profile-userbuttons">
-                                    <button type="button" className="btn btn-outline-secondary"
-                                    onClick={copyShopUrl}>
-                                        <i className="fa fa-clone" aria-hidden="true"></i>&nbsp;Copy
-                                    </button>
-                                    <button type="button" className="btn btn-outline-primary">
-                                        <i className="fa fa-share" aria-hidden="true"></i>&nbsp;Share
-                                    </button>
-                                </div>
 
                                 <div className="profile-usermenu">
                                     <ul className="nav flex-column">
@@ -62,35 +54,33 @@ const CusHomePage = () => {
                                                 Home </NavLink>
                                         </li>
                                         <li>
-                                            <NavLink activeClassName="active" to={`${url}/orders`}>
+                                            <NavLink activeClassName="active" to={`${url}/purchase`}>
                                                 <i className="glyphicon glyphicon-ok"></i>
                                                 All Ordered </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink activeClassName="active" to={`${url}/configure`}>
-                                                <i className="glyphicon glyphicon-flag"></i>
-                                                Configure </NavLink>
                                         </li>
                                     </ul>
                                 </div>
 
                             </div>
-                        </div>
-                        <div className="col-md-9">
-                            <div className="profile-content">
+                        </div>}
+                        <div className={customerId ? "col-md-9" : "col-md-12"}>
+                            <div className="shop-content">
                                 <Switch>
-                                    <Route exact path="/shop">
+                                    <Route exact path="/shopping">
                                         <AllShop />
                                     </Route>
-                                    <Route exact path={`${url}/orders`}>
-                                        <AllOrdered />
-                                    </Route>
-                                    <Route path={`${url}/orders/:orderId`}>
-                                        <OrderDetail isCustomer={true}/>
-                                    </Route>
-                                    <Route exact path={`${url}/cart/:cartId`}>
+                                    <Route path="/shopping/cart/:cartId">
                                         <Cart />
                                     </Route>
+                                    <Route exact path={`${url}/purchase`}>
+                                        <AllOrdered />
+                                    </Route>
+                                    <Route path={`${url}/purchase/:orderId`}>
+                                        <OrderDetail isCustomer={true}/>
+                                    </Route>
+                                    {/* <Route exact path={`${url}/cart/:cartId`}>
+                                        <Cart />
+                                    </Route> */}
                                     <Route path={`${url}/:shopId`}>
                                         <ShopHome />
                                     </Route>
@@ -101,7 +91,6 @@ const CusHomePage = () => {
                     </div>
                 </div>
             </div>
-            <Cart />
     </Fragment>
 }
 

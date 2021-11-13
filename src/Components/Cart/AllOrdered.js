@@ -23,7 +23,7 @@ const AllOrdered = () => {
                     <i className="fa fa-cart-arrow-down card-img-top" aria-hidden="true"></i>
                     <div className="card-body">
                         <h5 className="card-title">
-                        <i class="fa fa-coffee" aria-hidden="true"></i>&nbsp;{order.shopName}</h5>
+                        <i className="fa fa-coffee" aria-hidden="true"></i>&nbsp;{order.shopName}</h5>
                         <NavLink to={`${url}/${order.orderId}`} className="btn btn-primary">View</NavLink>
                     </div>
                 </div>
@@ -63,8 +63,11 @@ const AllOrdered = () => {
             <div className="row">
                 {listOrder}
             </div>
+            { allOrder.length == 0 &&
+                <div>You has no order.</div>
+            }
             {
-                errorMessage &&
+                errorMessage && 
                 <div className="alert alert-warning alert-dismissible fade show" role="alert">
                     <strong>{errorMessage}</strong>
                     <button type="button" className="close" data-dismiss="alert" aria-label="Close">

@@ -31,7 +31,7 @@ const SignUp = (props) => {
     const phoneNumberInputIsInvalid = !enteredPhoneNumberIsValid && enteredPhoneNumberTouched;
 
     let formIsValid = false;
-    if (shopNameInputIsInvalid || phoneNumberInputIsInvalid) {
+    if (!shopNameInputIsInvalid && !phoneNumberInputIsInvalid) {
         formIsValid = true;
     }
 
@@ -56,6 +56,17 @@ const SignUp = (props) => {
         }
     }
 
+    const inputBlurHandler = (event) => {
+        const filedName = event.target.name;
+        switch (filedName) {
+            case 'shopName':
+                setEnteredShopNameTouched(true);
+                break;
+            default:
+                setEnteredPhoneNumberTouched(true);
+        }
+    }
+    
     const maxlengthHandler = (event) => {
         if (event.target.value.length > event.target.maxLength) {
             event.target.value = event.target.value.slice(0, event.target.maxLength);
@@ -64,20 +75,19 @@ const SignUp = (props) => {
     
     const registerhandler = (event) => {
         event.preventDefault();
-        setEnteredShopNameTouched(true);
-        setEnteredPhoneNumberTouched(true);
+        console.log(formIsValid)
         if (!formIsValid) {
-            //return;
+            return;
         }
         const formData = new FormData();
         formData.append('Name', shopName);
         formData.append('PhoneNumber', phoneNumber);
-        if (role == 'shop') {
+        if (role === 'shop') {
             formData.append('Logo', imgInp);
         } else {
             formData.append('Avatar', imgInp);
         }
-        const urlApi = role == 'shop' ? 'http://localhost:8080/api/Shop/register' : 'http://localhost:8080/api/Customer/register';
+        const urlApi = role === 'shop' ? 'http://localhost:8080/api/Shop/register' : 'http://localhost:8080/api/Customer/register';
         fetch(urlApi, {
             method: 'POST', 
             body: formData,
@@ -124,12 +134,13 @@ const SignUp = (props) => {
                         <form onSubmit={registerhandler}>
                             <div className="form-group row">
                                 <label htmlFor="staticEmail" className="col-12 col-form-label">
-                                    {role == 'shop' ? 'Shop Name' : 'Name'}&nbsp;<span className="required">*</span>
+                                    {role === 'shop' ? 'Shop Name' : 'Name'}&nbsp;<span className="required">*</span>
                                 </label>
                                 <div className="col-12">
                                     <input type="text" name="shopName" className={nameInputClasses} 
                                     id="shopName" maxLength="100" placeholder="Name"
                                     onChange={inputChangeHandler}
+                                    onBlur={inputBlurHandler}
                                     />
                                     {
                                         shopNameInputIsInvalid &&
@@ -149,6 +160,7 @@ const SignUp = (props) => {
                                     name="phoneNumber" placeholder="PhoneNumber" maxLength="15"  
                                     onInput={maxlengthHandler}
                                     onChange={inputChangeHandler}
+                                    onBlur={inputBlurHandler}
                                     />
                                     {
                                         phoneNumberInputIsInvalid &&

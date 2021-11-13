@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState , Fragment} from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
@@ -13,35 +13,21 @@ const OrderDetail = (props) => {
     const history = useHistory();
 
     const [contentALert, setContentALert] = useState('');
+    const [order, setOrder] = useState(null);
+
+    const[itemsInCart, setItemsInCart] = useState([]);
 
     const { orderId } = useParams();
     const urlFetchOrder = `http://localhost:8080/api/Order/${orderId}`;
     const urlOrderStatus = `http://localhost:8080/api/Order/status`;
 
-    const orders = useSelector(state => state.order.orders);
-    const orderItem = orders.filter(order => order.orderId === orderId)[0];
-
     const orderStatus = useRef();
 
-    let customerId, cartId, status, deliveryInformation;
-    let customerName, customerPhoneNumber, orderTime, totalPrice, itemsInCart;
-    let listOrderedItem;
+    //const {shopName, phoneNumberOfShop} = order;
 
-    if (orderItem) {
-        customerName = orderItem.customerName;
-        customerPhoneNumber = orderItem.customerPhoneNumber;
-        orderTime = orderItem.orderTime;
-        totalPrice = orderItem.totalPrice;
-        totalPrice = orderItem.totalPrice;
-        itemsInCart = orderItem.itemsInCart;
-        customerId = orderItem.customerId;
-        cartId = orderItem.cartId;
-        status = orderItem.status;
-        deliveryInformation = orderItem.deliveryInformation;
-        listOrderedItem = itemsInCart.map(item => {
-            return <ItemOrdered item={item} key={item.itemId} />
-        });
-    }
+    const listOrderedItem = itemsInCart.map(item => {
+        return <ItemOrdered item={item} key={item.itemId} />
+    })
 
     const fetchOrder = async () => {
         const response = await fetch(urlFetchOrder, {
@@ -51,27 +37,14 @@ const OrderDetail = (props) => {
             throw new Error(response.status);
         }
         const data = await response.json();
-        customerName = data.customerName;
-        customerPhoneNumber = data.customerPhoneNumber;
-        orderTime = data.orderTime;
-        totalPrice = data.totalPrice;
-        totalPrice = data.totalPrice;
-        itemsInCart = data.itemsInCart;
-        customerId = data.customerId;
-        cartId = data.cartId;
-        status = data.status;
-        orderStatus.current.value = data.status;
-        listOrderedItem = itemsInCart.map(item => {
-            return <ItemOrdered item={item} key={item.itemId} />
-        })
+        setOrder(data);
+        setItemsInCart(data.itemsInCart);
     }
 
     useEffect(() => {
-        if (!orderItem) {
-            //fetchOrder();
-        }
+        fetchOrder();
         if (orderStatus.current) {
-            orderStatus.current.value = status
+            orderStatus.current.value = orderStatus;
         }
     }, [])
 
@@ -87,8 +60,8 @@ const OrderDetail = (props) => {
                 'Content-Type': 'application/json-patch+json'
             },
             body: JSON.stringify({
-                customerId: customerId,
-                cartId: cartId,
+                customerId: order.customerId,
+                //cartId: cartId,
                 orderId: orderId,
                 orderStatus: orderStatus.current.value
             })
@@ -107,42 +80,46 @@ const OrderDetail = (props) => {
         }
     }
     return (
+        <Fragment>
+        {
+            order &&
+        
         <div className="order-detail">
-            <button type="button" class="btn btn-outline-secondary ml-3" onClick={goBackList}>
-                <i class="fa fa-angle-double-left" aria-hidden="true"></i>&nbsp;Back
+            <button type="button" className="btn btn-outline-secondary ml-3" onClick={goBackList}>
+                <i className="fa fa-angle-double-left" aria-hidden="true"></i>&nbsp;Back
             </button>
             <div className="infor-order mt-3 row m-0">
                 <div className="col-6">
                     {!isCustomer &&
                     <div className="row">
                         <div className="col-6 title">Customer Name</div>
-                        <div className="col-6 content">{customerName}</div>
+                        <div className="col-6 content">{order.customerName}</div>
                     </div>}
                     {!isCustomer &&
                     <div className="row">
                         <div className="col-6 title">Customer Phone</div>
-                        <div className="col-6 content">{customerPhoneNumber}</div>
+                        <div className="col-6 content">{order.customerPhoneNumber}</div>
                     </div>}
                     {isCustomer &&
                     <div className="row">
                         <div className="col-6 title">Shop Name</div>
-                        <div className="col-6 content">{customerName}</div>
+                        <div className="col-6 content">{order.customerName}</div>
                     </div>}
                     {isCustomer &&
                     <div className="row">
                         <div className="col-6 title">Shop Phonenumber</div>
-                        <div className="col-6 content">{customerPhoneNumber}</div>
+                        <div className="col-6 content">{order.customerPhoneNumber}</div>
                     </div>}
                     <div className="row">
                         <div className="col-6 title">Order Time</div>
                         <div className="col-6 content">
-                            <Moment date={orderTime} format="YYYY-MM-DD HH:mm:ss" />
+                            <Moment date={order.orderTime} format="YYYY-MM-DD HH:mm:ss" />
                         </div>
                     </div>
                     {!isCustomer &&
                     <div className="row">
                         <div className="col-6 title">Ship To</div>
-                        <div className="col-6 content">{deliveryInformation}</div>
+                        <div className="col-6 content">{order.deliveryInformation}</div>
                     </div>}
                 </div>
                 {!isCustomer &&
@@ -159,7 +136,7 @@ const OrderDetail = (props) => {
                         </select>
                     </div>
                     <div className="col-3">  
-                        <button type="button" class="btn btn-outline-success"onClick={submitStatus}>Apply</button>
+                        <button type="button" className="btn btn-outline-success"onClick={submitStatus}>Apply</button>
                     </div>
                 </div>
                 }
@@ -179,12 +156,14 @@ const OrderDetail = (props) => {
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>Total: ${totalPrice}</td>
+                        <td>Total: ${order.totalPrice}</td>
                     </tr>
                 </tbody>
             </table>
             {contentALert && <Notification contentALert={contentALert}/>}
         </div>
+        }
+        </Fragment>
     )
 }
 
