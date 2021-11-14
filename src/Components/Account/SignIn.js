@@ -46,7 +46,7 @@ const SignIn = (props) => {
         }
         const response = await fetch(urlApi, {
             method: 'POST', 
-            body: JSON.stringify({phoneNumberp: phoneNumber}),
+            body: JSON.stringify({phoneNumber: phoneNumber}),
             headers: {
                 'Content-Type': 'application/json'
                 // 'Content-Type': 'application/x-www-form-urlencoded',

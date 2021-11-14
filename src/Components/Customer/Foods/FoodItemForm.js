@@ -1,8 +1,8 @@
-import { useRef, useCallback, Fragment, useState } from 'react';
+import { useCallback, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import { cartActions } from '../../../Store/cart';
-import ConfirmModal from '../../Alert/ConfirmModal';
 
 const FoodItemForm = (props) => {
     const dispatch = useDispatch();
@@ -11,6 +11,7 @@ const FoodItemForm = (props) => {
     const modalContent = "Are you sure remove item?";
 
     const cartId = useSelector(state => state.cart.cartId);
+    //const { cartId } = useParams();
 
     const { itemId, name, price } = props.item;
     const { customerId, isCart } = props;
@@ -103,12 +104,11 @@ const FoodItemForm = (props) => {
                 {isCart &&
                 <div className="">
                     <button type="button" className="btn btn-outline-danger mr-2" 
-                        data-toggle="modal" data-target="#confirmModal">
+                        onClick={removeItem}>
                         <i className="fa fa-trash" aria-hidden="true"></i></button>
                     <button type="submit" className="btn btn-outline-success"><b>+</b></button>
                 </div>}
             </form>
-            <ConfirmModal modalTitle={modalTitle} modalContent={modalContent} actionYes={removeItem}/>
         </Fragment>
     )
 }
