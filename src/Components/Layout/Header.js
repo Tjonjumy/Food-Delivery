@@ -64,14 +64,13 @@ const Header = () => {
               <Link to="/buyer/sign-in" onClick={forCustomerHeader}>Sign In</Link>
             </li>
           }
+          { (isAuth) && 
             <li className="user-info-wraper">
-            { (isAuth && customerId) &&
-            <CartButton goToCart={goToCart}/>}
-          { 
-            (isAuth) && 
-                <Avatar logOutHandler={logOutHandler} avatar={avatar}/>
-          }
+              { (customerId) &&
+              <CartButton goToCart={goToCart}/>}
+              <Avatar logOutHandler={logOutHandler} avatar={avatar}/>
             </li>
+          }
         </ul>
     </Fragment>
 }

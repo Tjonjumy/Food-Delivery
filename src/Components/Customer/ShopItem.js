@@ -8,7 +8,7 @@ const ShopItem = (props) => {
 
     return (
         <div className="col-sm-6">
-            <div className="card">
+            <div className="card mb-4">
                 <img src={`data:image/jpeg;base64,${image}`} className="card-img-top pt-3" alt="shop-logo" />
                 <div className="card-body text-center">
                     <h5 className="card-title">

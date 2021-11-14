@@ -3,11 +3,13 @@ import { useDispatch } from 'react-redux';
 import { useRouteMatch, Switch, Route, NavLink } from 'react-router-dom';
 
 import './AdminHome.css';
+import DashBoard from './DashBoard';
 import Foods from './Foods';
 import Orders from './Orders';
 import OrderDetail from '../Shop/OrderDetail';
 import { foodsActions } from '../../Store/foods';
 import { orderActions } from '../../Store/order';
+import Configure from '../Admin/Configure';
 
 const AdminHome = () => {
     let { url } = useRouteMatch();
@@ -18,6 +20,7 @@ const AdminHome = () => {
 
     const [isShowALert, setIsShowALert] = useState(false);
     const [contentALert, setContentALert] = useState('');
+    const [logo, setLogo] = useState(null);
 
     const shopId = localStorage.getItem('shopId');
     const urlApi = `http://localhost:8080/api/Shop/${shopId}`;
@@ -32,15 +35,13 @@ const AdminHome = () => {
                 throw new Error('Something went wrong!');
             }
             const data = await response.json();
-            console.log(data);
             setShopName(data.name);
             setShopPhoneNumber(data.phoneNumber);
+            setLogo(data.image);
             localStorage.setItem('shopName', data.name);
             localStorage.setItem('shopPhoneNumber', data.phoneNumber);
             dispatch(foodsActions.setItems({items: data.items, total: data.items.length}));
-
         } catch(error) {
-            console.log(error)
         }
     }, []);
     
@@ -71,7 +72,7 @@ const AdminHome = () => {
     }, []);
 
     const copyShopUrl = () => {
-        navigator.clipboard.writeText(`http://localhost:3000/shop/${shopId}`);
+        navigator.clipboard.writeText(`http://localhost:3000/shopping/${shopId}`);
     }
 
     const toggleAlert = (isShow, contentALert) => {
@@ -137,6 +138,9 @@ const AdminHome = () => {
                                 <i className="fa fa-check" aria-hidden="true">&nbsp;</i>{contentALert}</div>
                         }
                             <Switch>
+                                <Route exact path='/admin'>
+                                    <DashBoard />
+                                </Route>
                                 <Route path='/admin/foods'>
                                     <Foods toggleAlert={toggleAlert}/>
                                 </Route>
@@ -145,6 +149,10 @@ const AdminHome = () => {
                                 </Route>
                                 <Route path='/admin/orders/:orderId'>
                                     <OrderDetail />
+                                </Route>
+                                <Route path='/admin/configure'>
+                                    <Configure shopId={shopId} logo={logo} 
+                                    shopPhoneNumber={shopPhoneNumber} shopName={shopName}/>
                                 </Route>
                             </Switch>
                         </div>

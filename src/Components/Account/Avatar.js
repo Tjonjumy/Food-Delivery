@@ -1,10 +1,12 @@
 import { useCallback, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const Avatar = (props) => {
     const {avatar} = props;
     const [image, setImage] = useState(null);
 
-    const shopId = localStorage.getItem('shopId');
+    //const shopId = localStorage.getItem('shopId');
+    const shopId = useSelector(state => state.auth.shopId);
 
     const urlFetchShop = `http://localhost:8080/api/Shop/${shopId}`;
 
@@ -19,24 +21,19 @@ const Avatar = (props) => {
         }
         const data = await response.json();
         setImage(data.image);
-        //dispatch(foodsActions.setItems({items: data.items, total: data.items.length}));
     }, []);
 
     useEffect(() => {
         if (shopId) {
             fetchShopInfo();
         }
-    })
+    }, [shopId])
 
     return (
         <>
-            {/* <div className="avatar-wraper dropdown-toggle">
-                <img src={`data:image/jpeg;base64,${image}`} alt="your avatar"
-                    id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false" />
-            </div> */}
             <div className="dropdown">
                 <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-                <img src={`data:image/jpeg;base64,${avatar}`} alt="your avatar" className="avatar" />
+                <img src={`data:image/jpeg;base64,${avatar || image}`} alt="your avatar" className="avatar" />
                 </button>
                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     {/* <p className="dropdown-item" onClick={props.logOutHandler}>My Account</p> */}

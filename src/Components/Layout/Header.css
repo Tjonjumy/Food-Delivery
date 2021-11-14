@@ -16,4 +16,6 @@
   }
   .user-info-wraper {
     display: flex;
+    color: #000;
+    line-height: 49px;
   }

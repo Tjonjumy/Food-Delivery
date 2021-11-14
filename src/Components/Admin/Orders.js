@@ -11,6 +11,9 @@ const Orders = () => {
 
     return (
         <div className="list-order">
+            {listOrder.length == 0 &&
+                <div className="text-center">You has no orders.</div>} 
+            {listOrder.length > 0 &&
             <table className="table ordered-item-table">
                 <thead>
                     <tr>
@@ -26,7 +29,7 @@ const Orders = () => {
                 <tbody>
                     {listOrder}   
                 </tbody>
-            </table>
+            </table>}
         </div>
     )
 }

@@ -13,6 +13,11 @@
 .fa-shopping-cart {
     font-size: 2rem;
 }
+.fa-cart-arrow-down {
+    font-size: 5rem;
+    color: #95b1c9;
+    line-height: 150px;
+}
 .btn .total-quantity {
     top: -16px;
     left: -5px;

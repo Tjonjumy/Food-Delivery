@@ -18,7 +18,7 @@ const ConfirmModal = (props) => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-danger" data-dismiss="modal">Discard</button>
-                        <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={props.removeItem}>Yes</button>
+                        <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={props.actionYes}>Yes</button>
                     </div>
                 </div>
             </div>

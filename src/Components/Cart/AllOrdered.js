@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useRouteMatch, NavLink } from 'react-router-dom';
+
 const AllOrdered = () => {
     const { url } = useRouteMatch();
 
@@ -18,8 +19,8 @@ const AllOrdered = () => {
 
     const listOrder = allOrder.map(order => {
         return (
-            <div className="col-sm-6" key={order.orderId}>
-                <div className="card">
+            <div className="col-sm-6 mb-3" key={order.orderId}>
+                <div className="card text-center">
                     <i className="fa fa-cart-arrow-down card-img-top" aria-hidden="true"></i>
                     <div className="card-body">
                         <h5 className="card-title">
@@ -64,7 +65,7 @@ const AllOrdered = () => {
                 {listOrder}
             </div>
             { allOrder.length == 0 &&
-                <div>You has no order.</div>
+                <div>You have no order.</div>
             }
             {
                 errorMessage && 

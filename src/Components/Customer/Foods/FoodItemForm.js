@@ -108,7 +108,7 @@ const FoodItemForm = (props) => {
                     <button type="submit" className="btn btn-outline-success"><b>+</b></button>
                 </div>}
             </form>
-            <ConfirmModal modalTitle={modalTitle} modalContent={modalContent} removeItem={removeItem}/>
+            <ConfirmModal modalTitle={modalTitle} modalContent={modalContent} actionYes={removeItem}/>
         </Fragment>
     )
 }

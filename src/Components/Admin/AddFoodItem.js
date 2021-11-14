@@ -1,16 +1,14 @@
-import { useRef  } from 'react';
-import { useDispatch } from 'react-redux';
+import { useRef, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useStateWithCallbackLazy } from 'use-state-with-callback';
-import { useHistory } from 'react-router-dom';
 
 import { foodsActions } from '../../Store/foods';
 
 const AddFoodItem = (props) => {
-    const {item} = props;
+    const {item, isAdd} = props;
     
     const dispatch = useDispatch();
-    const shopId = localStorage.getItem('shopId');
-    const history = useHistory();
+    const shopId = useSelector(state => state.auth.shopId);
 
     const imgRef = useRef();
     const nameItemRef = useRef();
@@ -19,14 +17,12 @@ const AddFoodItem = (props) => {
 
     const [imgInp, setImgInp] = useStateWithCallbackLazy('');
     
-    if (item) {
-        console.log(item);
-        nameItemRef.current.value = item.name;
-        priceRef.current.value = item.price;
-        // setImgInp(item.image, () => {
-        //     imgPreviewRef.current.src = `data:image/jpeg;base64,${item.image}`;
-        // });
-    }
+    useEffect(() => {
+        if (item && !isAdd) {
+            nameItemRef.current.value = item.name;
+            priceRef.current.value = item.price;
+        }
+    }, [isAdd, item])
 
     const previewImgHandler = (evt) => {
         const selectedImg = imgRef.current.files[0];
@@ -55,7 +51,6 @@ const AddFoodItem = (props) => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             dispatch(foodsActions.addItem(data));
             imgRef.current.value = '';
             nameItemRef.current.value = '';
@@ -65,14 +60,39 @@ const AddFoodItem = (props) => {
             setTimeout(() => {props.toggleAlert(false)}, 1500)
             //{"itemId":"e1fe0b","name":"Hamburge","price":1.0,"image":"","isActive":true,"errorMessage":null,"shopId":null}
         })
-        .catch((error) => {
-
-            console.error('Error:', error);
-        });
     }
-
-    const saveItemHandler = () => {
-        
+    const urlEditItem = 'http://localhost:8080/api/Item';
+    const editItemHandler = (event) => {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append('ShopId', shopId);
+        formData.append('ItemId', item.itemId);
+        formData.append('Name', nameItemRef.current.value.trim());
+        formData.append('Price', priceRef.current.value);
+        formData.append('Image', imgInp);
+        fetch(urlEditItem, {
+            method: 'PUT', 
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.errorMessage) {
+                const updateItem = {
+                    itemId: item.itemId,
+                    name: data.name,
+                    price: data.price,
+                    image: data.image,
+                    shopId: item.shopId,
+                    isActive: item.isActive
+                }
+                dispatch(foodsActions.updateItem(updateItem));
+                props.toggleAlert(true, 'Update successfully!');
+                setTimeout(() => {props.toggleAlert(false)}, 1500)
+            } else {
+                props.toggleAlert(true, data.errorMessage);
+                setTimeout(() => {props.toggleAlert(false)}, 1500)
+            }
+        })
     }
 
     return <>
@@ -101,14 +121,15 @@ const AddFoodItem = (props) => {
                                     </div>
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="inputPassword" className="col-lg-3 col-form-label">Logo</label>
-                                    <div className="col-lg-9">
+                                    <label htmlFor="inputPassword" className="col-lg-2 col-form-label">Logo</label>
+                                    <div className="col-lg-10">
                                         {imgInp && <i className="fa fa-times remove-img" aria-hidden="true" onClick={removeImgHnadler}></i>}
                                         {imgInp && <img className="preview-img" id="previewImg" src="#" alt="Your logo" ref={imgPreviewRef} />}
-                                        {!imgInp && <label className="pt-2 inp-img" htmlFor="imgInp" id="labelImgInp">
+                                        {!imgInp && isAdd && <label className="pt-2 inp-img" htmlFor="imgInp" id="labelImgInp">
                                             <i className="fa fa-picture-o" aria-hidden="true"></i>&nbsp;Select Image
                                         </label>}
-                                        {imgInp && <label className="pt-2 inp-img d-block" htmlFor="imgInp" id="labelImgInp">
+                                        {!isAdd && item && !imgInp && <img src={`data:image/jpeg;base64,${item.image}`} alt="food image" className="preview-img"/>}
+                                        {( imgInp || !isAdd ) && <label className="pt-2 inp-img d-block" htmlFor="imgInp" id="labelImgInp">
                                             <i className="fa fa-picture-o" aria-hidden="true"></i>&nbsp;Select another Image
                                         </label>}
                                         <input type="file" name="logo" className="form-control-file d-none" ref={imgRef}
@@ -121,8 +142,8 @@ const AddFoodItem = (props) => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {!item && <button type="submit" className="btn btn-primary" onClick={addItemHandler}>Add</button>}
-                        {item && <button type="submit" className="btn btn-primary" onClick={saveItemHandler}>Save</button>}
+                        {isAdd && <button type="submit" className="btn btn-primary" onClick={addItemHandler}>Add</button>}
+                        {!isAdd && <button type="submit" className="btn btn-primary" onClick={editItemHandler}>Save</button>}
                     </div>
                 </div>
             </div>

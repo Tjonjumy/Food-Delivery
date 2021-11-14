@@ -23,8 +23,6 @@ const OrderDetail = (props) => {
 
     const orderStatus = useRef();
 
-    //const {shopName, phoneNumberOfShop} = order;
-
     const listOrderedItem = itemsInCart.map(item => {
         return <ItemOrdered item={item} key={item.itemId} />
     })
@@ -43,10 +41,10 @@ const OrderDetail = (props) => {
 
     useEffect(() => {
         fetchOrder();
-        if (orderStatus.current) {
-            orderStatus.current.value = orderStatus;
+        if (order) {
+            orderStatus.current.value = order.status;
         }
-    }, [])
+    }, [isCustomer])
 
     const goBackList = () => {
         history.goBack()
@@ -70,7 +68,6 @@ const OrderDetail = (props) => {
 
         }
         const data = await response.json();
-        console.log(data);
         if (data.isSuccess) {
             setContentALert('Change Order Status Successfully!');
             setTimeout(() => setContentALert(''), 1500);
@@ -103,12 +100,12 @@ const OrderDetail = (props) => {
                     {isCustomer &&
                     <div className="row">
                         <div className="col-6 title">Shop Name</div>
-                        <div className="col-6 content">{order.customerName}</div>
+                        <div className="col-6 content">{order.shopName}</div>
                     </div>}
                     {isCustomer &&
                     <div className="row">
-                        <div className="col-6 title">Shop Phonenumber</div>
-                        <div className="col-6 content">{order.customerPhoneNumber}</div>
+                        <div className="col-6 title">Shop Phone Number</div>
+                        <div className="col-6 content">{order.phoneNumberOfShop}</div>
                     </div>}
                     <div className="row">
                         <div className="col-6 title">Order Time</div>
@@ -128,8 +125,7 @@ const OrderDetail = (props) => {
                         <select className="form-control" ref={orderStatus}>
                             <option value="">Order Status</option>
                             <option value="Confirmed">Confirmed</option>
-                            <option value="Cancelled">Cancelled</option>
-                            <option value="Sent To Kitchen">Sent To Kitchen</option>
+                            <option value="SentToKitchen">Sent To Kitchen</option>
                             <option value="Ready for Pickup">Ready for Pickup</option>
                             <option value="Ready for Delivery">Ready for Delivery</option>
                             <option value="Delivered">Delivered</option>
@@ -137,6 +133,14 @@ const OrderDetail = (props) => {
                     </div>
                     <div className="col-3">  
                         <button type="button" className="btn btn-outline-success"onClick={submitStatus}>Apply</button>
+                    </div>
+                </div>
+                }
+                {isCustomer &&
+                <div className="col-6 row">
+                    <div className="col-3 title">Status</div>
+                    <div className="col-6 content">
+                        <span className="badge badge-primary">{order.status || "Pending"}</span>
                     </div>
                 </div>
                 }

@@ -7,11 +7,13 @@ import FoodItem from '../Shop/FoodItem';
 const Foods = (props) => {
 
     const [item, setItem] = useState(null);
+    const [isAdd, setIsAdd] = useState(false);
 
     const items = useSelector(state => state.foods.items);
 
     const getItemEdit = (item) => {
         setItem(item);
+        setIsAdd(false);
     }
     //const activeItems = items.filter(item => item.isActive);
     const listItems = items.map(item => {
@@ -23,7 +25,8 @@ const Foods = (props) => {
     
     return <Fragment>
         <div className="row justify-content-end m-0">
-            <button type="button" className="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+            <button type="button" className="btn btn-success" onClick={() => {setIsAdd(true)}}
+            data-toggle="modal" data-target="#exampleModal">
                 <i className="fa fa-plus" aria-hidden="true"></i>&nbsp;Add
             </button>
         </div>
@@ -39,7 +42,7 @@ const Foods = (props) => {
         </div>}
         {listItems}
         
-        <AddFoodItem toggleAlert={props.toggleAlert} item={item}/>
+        <AddFoodItem toggleAlert={props.toggleAlert} item={item} isAdd={isAdd}/>
         
     </Fragment>
 }

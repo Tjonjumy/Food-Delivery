@@ -1,15 +1,23 @@
-import { useState, Fragment, useEffect } from 'react';
+import { useState, Fragment, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams} from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import './Cart.css';
 import FoodItem from '../Customer/Foods/FoodItem';
 import Notification from '../Alert/Notification';
 import Loader from '../Alert/Loader';
+import ConfirmModal from '../Alert/ConfirmModal';
+
 import { cartActions } from '../../Store/cart';
 
 const Cart = () => {
+    const history = useHistory();
+
+    const btnShowModal = useRef();
+
     const dispatch = useDispatch();
+    const isAuth = useSelector(state => state.auth.isAuthenticated);
+
     const customerId = useSelector(state => state.auth.customerId);
 
     let {cartId}  = useParams();
@@ -92,7 +100,11 @@ const Cart = () => {
     });
 
     const copyCartUrl = () => {
-        navigator.clipboard.writeText(`http://localhost:3000/shop/cart/${cartId}`);
+        navigator.clipboard.writeText(`http://localhost:3000/shopping/cart/${cartId}`);
+        toggleAlert(true, 'Copy successfully');
+                    setTimeout(() => {
+                        toggleAlert(false);
+                    }, 1500)
     }
 
     const fetchCartData = async () => {
@@ -115,8 +127,16 @@ const Cart = () => {
         }
     };
 
+    const goSignIn = () => {
+        history.push('/buyer/sign-in');
+    }
+
     useEffect(() => {
-        fetchCartData();
+        if (isAuth) {
+            fetchCartData();
+        } else {
+            btnShowModal.current.click();
+        }
     }, []);
 
     return (    
@@ -124,22 +144,32 @@ const Cart = () => {
             <div className="col-12 modal-header justify-content-between">
                 <h4 className="modal-title" id="myLargeModalLabel">
                 <i className="fa fa-shopping-bag" aria-hidden="true"></i>&nbsp;Your Cart</h4>
+                {listItems.length > 0 &&
                 <button type="button" className="btn btn-outline-secondary btn-sm"
                     onClick={copyCartUrl}>
                     <i className="fa fa-clone" aria-hidden="true"></i>&nbsp;Copy
                 </button>
+                }
             </div>
             <div className="mt-5">
                 {listItems}
-                {listItems.length == 0 && <p>You have no items in your shopping cart</p>}
             </div>
+            {listItems.length === 0 && 
+                <div className="m-5 text-center">
+                    <p>You have no items in your shopping cart</p>
+                </div>
+            }
             <div className="modal-footer">
                 <div className="total-price mr-5"><b>Total: ${totalPrice.toFixed(2)}</b></div>
-                <button type="button" className="btn btn-primary" disabled={listItems.length == 0}
+                <button type="button" className="btn btn-primary" disabled={listItems.length === 0}
                     onClick={submitOrder}>Order Now</button>
             </div>
             {isShowALert && <Notification classALert={classALert} contentALert={contentALert} />}
                 {isLoading && <Loader />} 
+            
+            <button type="button" className="btn btn-outline-danger mr-2 invisible" ref={btnShowModal}
+                data-toggle="modal" data-target="#confirmModal"></button>
+            <ConfirmModal modalTitle="Message" modalContent="Please Sign In to Continue." actionYes={goSignIn}/>
         </Fragment>
     )
 }

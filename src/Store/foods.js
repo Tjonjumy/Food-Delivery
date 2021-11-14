@@ -14,6 +14,18 @@ const foodsSlice = createSlice({
             state.items.push(action.payload);
             state.total++;
         },
+        updateItem(state, action) {
+            const existingItemIdx = state.items.findIndex(item => item.itemId === action.payload.itemId);
+            state.items.splice(existingItemIdx, 1, action.payload);
+        },
+        removeItem(state, action) {
+            const existingItemIdx = state.items.findIndex(item => item.itemId === action.payload);
+            state.items[existingItemIdx].isActive = false;
+        },
+        activeItem(state, action) {
+            const existingItemIdx = state.items.findIndex(item => item.itemId === action.payload);
+            state.items[existingItemIdx].isActive = true;
+        },
     }
 });
 
