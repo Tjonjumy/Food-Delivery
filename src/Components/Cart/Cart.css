@@ -1,0 +1,31 @@
+.modal-content {
+    top: 60px;
+    max-height: 80vh;
+}
+.modal-body {
+    overflow-y: scroll;
+}
+.cart-btn, .cart-btn:focus {
+    outline: none;
+    border: none;
+    color: #000;
+}
+.fa-shopping-cart {
+    font-size: 2rem;
+}
+.fa-cart-arrow-down {
+    font-size: 5rem;
+    color: #95b1c9;
+    line-height: 150px;
+}
+.btn .total-quantity {
+    top: -16px;
+    left: -5px;
+}
+::-webkit-scrollbar {
+    width: 6px;
+  }
+::-webkit-scrollbar-thumb {
+    background: #afb6e5;
+    border-radius: 3px;
+  }

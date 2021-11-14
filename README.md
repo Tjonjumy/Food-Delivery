@@ -1,3 +1,7 @@
+# pull latest
+docker-compose -f docker-compose.amd.yaml pull
+# start 
+docker-compose -f docker-compose.amd.yaml up -d --force-recreate
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

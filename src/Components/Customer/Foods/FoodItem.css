@@ -1,0 +1,41 @@
+.menu-item-wraper {
+    border: 1px solid #ddd;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    margin: 0 0 20px;
+    padding: 0;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #EEF1F8;
+}
+.info-item {
+    width: 40%;
+    padding-left: 1rem;
+}
+.img-item img{
+    width: 100%;
+    object-fit: cover;
+    height: 150px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.item-price {
+    font-size: 1.5rem;
+}
+.input-group .amount-input {
+    padding-left: 1rem;
+    width: 3rem;
+    cursor: not-allowed
+}
+
+.card-img-top {
+    width: auto;
+    height: 150px;
+    object-fit: contain;
+}
+.menu-item-wraper:hover {
+    border: 1px solid #aaa;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.45);
+}

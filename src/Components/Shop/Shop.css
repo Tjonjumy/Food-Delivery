@@ -1,0 +1,9 @@
+.title {
+    font-weight: bold;
+}
+.ordered-item-table tbody tr:nth-child(odd):hover{
+    background-color: #F6F9FB;
+}
+.ordered-item-table tbody tr:nth-child(even):hover{
+    background-color: #e0e9ee;
+}

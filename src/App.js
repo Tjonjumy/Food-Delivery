@@ -1,48 +1,71 @@
 import './App.css';
 import { BrowserRouter as Router,
           Switch,
-          Route
+          Route,
+          Redirect,
 } from "react-router-dom";
 
 import Home from './Components/Home/HomeComponent';
-import Header from './Components/UI/Header';
-import SignUp from './Components/Account/SingUp';
+import Header from './Components/Layout/Header';
+import SignUp from './Components/Account/SignUp';
 import SignIn from './Components/Account/SignIn';
-import AdminHome from './Components/HomePage/AdminHome';
+import AdminHome from './Components/Admin/AdminHome';
+import CusHomePage from './Components/Customer/CusHomePage';
+
 function App() {
+ 
+
   return (
     <Router>
-      <div className='w-100'>
         <Header />
         <Switch>
           <Route exact path="/">
             <Home />
           </Route>
-          <Route path="/about">
-            <About />
+          <Route path="/buyer/sign-in">
+            <SignIn role="buyer"/>
           </Route>
-          <Route path="/sign-in">
-            <SignIn />
+          <Route path="/shop/sign-in">
+            <SignIn role="shop"/>
           </Route>
-          <Route path="/sign-up">
-            <SignUp />
+          <Route path="/buyer/sign-up">
+            <SignUp role="buyer"/>
           </Route>
-          <Route path="/admin/:id">
+          <Route path="/shop/sign-up">  
+            <SignUp role="shop"/>
+          </Route>
+          <Route path="/shopping">
+            <CusHomePage />
+          </Route>
+
+          <PrivateRoute path="/admin">
             <AdminHome />
-          </Route>
+          </PrivateRoute>
         </Switch>
-      </div>
     </Router>
   );
 }
 
 export default App;
 
-
-function About() {
+function PrivateRoute({ children, ...rest }) {
+  const shopId = localStorage.getItem('shopId');
   return (
-    <div>
-      <h2>About</h2>
-    </div>
+    <Route
+      {...rest}
+      render={({ location }) =>
+      shopId ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/shop/sign-in",
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
   );
 }
+
